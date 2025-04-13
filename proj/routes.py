@@ -12,3 +12,4 @@ def product_list():
 def product_details(id):
     product = Product.query.all(id=id)
     return render_template('product_details.html', product=product)
+
