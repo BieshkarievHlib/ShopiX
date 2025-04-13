@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    {% for product in products %}
+    <div class="container"> 
+        Name: {{ product.name }}
+        In stock: {{ product.in_stock }}
+    </div>
+    {% endfor %}
+{% endblock %}
