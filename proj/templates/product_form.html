@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <form method="post">
+        {{ form.hidden_tag() }}
+        {{ form.name.label }}
+        {{ form.name(size=16) }}
+
+        {{ form.in_stock.label }}
+        {{ form.in_stock(step="1") }}
+        <button type="submit">Додати продукт</button>
+    </form>
+{% endblock %}
