@@ -3,8 +3,9 @@
 {% block content %}
     {% for product in products %}
     <div class="container"> 
-        Name: {{ product.name }}
-        In stock: {{ product.in_stock }}
+        Назва продукту: {{ product.name }} <br>
+        Кількість на складі: {{ product.in_stock }} <br>
+        <a href="{{ url_for('product_details', id=product.id) }}">Детальніше про продукт</a>
     </div>
     {% endfor %}
 {% endblock %}

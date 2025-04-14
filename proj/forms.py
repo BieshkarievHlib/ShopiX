@@ -8,5 +8,5 @@ class ProductForm(FlaskForm):
     submit = SubmitField('Створити продукт')
 
     class Meta:
-        csrf = False    #Спеціально додаємо вразливість.
+        csrf = False    #Спеціально додаємо вразливість
     

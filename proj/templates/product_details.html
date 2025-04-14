@@ -1,5 +1,11 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    Name: {product.name}
+    Назва продукту: {{ product.name }} <br>
+    Кількість на складі: {{ product.in_stock }} <br>
+    <a href="{{ url_for('product_edit', id=product.id) }}">Редагувати продукт</a> <br>
+    <form action="{{ url_for('product_delete', id=product.id) }}" method="post">
+        <button type="submit">Видалити продукт</button> <br>
+    </form>
+    <a href="{{ url_for('product_list') }}">Назад до списку продуктів</a> <br>
 {% endblock %}

@@ -10,4 +10,5 @@
         {{ form.in_stock(step="1") }}
         <button type="submit">Додати продукт</button>
     </form>
+    <a href="{{ url_for('product_list') }}">Назад до списку продуктів</a>
 {% endblock %}
