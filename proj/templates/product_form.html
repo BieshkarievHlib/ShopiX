@@ -1,14 +1,75 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <form method="post">
-        {{ form.hidden_tag() }}
-        {{ form.name.label }}
-        {{ form.name(size=16) }}
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">
+                        {% if form.name.data %}
+                            Редагувати продукт
+                        {% else %}
+                            Додати новий продукт
+                        {% endif %}
+                    </h2>
 
-        {{ form.in_stock.label }}
-        {{ form.in_stock(step="1") }}
-        <button type="submit">Додати продукт</button>
-    </form>
-    <a href="{{ url_for('product_list') }}">Назад до списку продуктів</a>
+                    <form method="post">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="form-group">
+                            {{ form.name.label(class="font-weight-bold") }}
+                            {{ form.name(
+                                class="form-control" + (" is-invalid" if form.name.errors else ""),
+                                type="text",
+                                placeholder="Введіть назву продукту",
+                                maxlength="100",
+                                required=True
+                            ) }}
+                            {% if form.name.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">Максимальна довжина - 100 символів</small>
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.in_stock.label(class="font-weight-bold") }}
+                            {{ form.in_stock(
+                                class="form-control" + (" is-invalid" if form.in_stock.errors else ""),
+                                type="number",
+                                min="0",
+                                step="1",
+                                placeholder="Введіть кількість",
+                                required=True
+                            ) }}
+                            {% if form.in_stock.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.in_stock.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">Введіть ціле число, більше або рівне 0</small>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                {% if form.name.data %}
+                                    Зберегти зміни
+                                {% else %}
+                                    Додати продукт
+                                {% endif %}
+                            </button>
+                            <a href="{{ url_for('product_list') }}" class="btn btn-secondary">
+                                Назад до списку продуктів
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

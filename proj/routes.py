@@ -37,9 +37,8 @@ def product_edit(id):
     form = ProductForm(obj=product)
 
     if form.validate_on_submit():
-        product.name=form.name.data,
+        product.name=form.name.data
         product.in_stock=form.in_stock.data
-        db.session.add(product)
         db.session.commit()
         flash('Продукт успішно відредаговано!', 'success')
         return redirect(url_for('product_list'))

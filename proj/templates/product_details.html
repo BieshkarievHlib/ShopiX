@@ -1,11 +1,63 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    Назва продукту: {{ product.name }} <br>
-    Кількість на складі: {{ product.in_stock }} <br>
-    <a href="{{ url_for('product_edit', id=product.id) }}">Редагувати продукт</a> <br>
-    <form action="{{ url_for('product_delete', id=product.id) }}" method="post">
-        <button type="submit">Видалити продукт</button> <br>
-    </form>
-    <a href="{{ url_for('product_list') }}">Назад до списку продуктів</a> <br>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">{{ product.name }}</h2>
+                    
+                    <div class="mb-4">
+                        <h5>Кількість на складі:</h5>
+                        {% if product.in_stock > 0 %}
+                            <span class="badge badge-success">{{ product.in_stock }}</span>
+                        {% else %}
+                            <span class="badge badge-danger">Немає в наявності</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{{ url_for('product_edit', id=product.id) }}" class="btn btn-warning">
+                            Редагувати продукт
+                        </a>
+                        
+                        <form action="{{ url_for('product_delete', id=product.id) }}" method="post" class="d-inline">
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
+                                Видалити продукт
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <a href="{{ url_for('product_list') }}" class="btn btn-secondary">
+                    Назад до списку продуктів
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Підтвердження видалення</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Ви впевнені, що хочете видалити продукт "{{ product.name }}"?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Скасувати</button>
+                    <form action="{{ url_for('product_delete', id=product.id) }}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger">Видалити</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
