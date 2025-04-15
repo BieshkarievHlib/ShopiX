@@ -22,7 +22,7 @@
                                 class="form-control" + (" is-invalid" if form.name.errors else ""),
                                 type="text",
                                 placeholder="Введіть назву продукту",
-                                maxlength="100",
+                                maxlength="64",
                                 required=True
                             ) }}
                             {% if form.name.errors %}
@@ -32,7 +32,7 @@
                                     {% endfor %}
                                 </div>
                             {% endif %}
-                            <small class="form-text text-muted">Максимальна довжина - 100 символів</small>
+                            <small class="form-text text-muted">Максимальна довжина - 64 символи</small>
                         </div>
 
                         <div class="form-group">
@@ -53,6 +53,22 @@
                                 </div>
                             {% endif %}
                             <small class="form-text text-muted">Введіть ціле число, більше або рівне 0</small>
+                        </div>
+
+                        <div class="form-group">
+                            {{ form.description.label(class="font-weight-bold") }}
+                            {{ form.description(
+                                class="form-control" + (" is-invalid" if form.description.errors else ""),
+                                rows="4",
+                                placeholder="Введіть опис продукту"
+                            ) }}
+                            {% if form.description.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.description.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center mt-4">
