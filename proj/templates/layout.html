@@ -55,6 +55,14 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('cart') }}">
+                            <i class="fas fa-shopping-cart"></i> Кошик
+                            {% if session.cart and session.cart|length > 0 %}
+                                <span class="badge badge-pill badge-success">{{ session.cart|length }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
                     {% if current_user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('user_details', id=current_user.id) }}">

@@ -1,22 +1,40 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, IntegerField, TextAreaField, PasswordField, EmailField, BooleanField
+from wtforms import StringField, SubmitField, IntegerField, TextAreaField, PasswordField, EmailField, BooleanField, FloatField, SelectField, HiddenField, FieldList, FormField
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Regexp, Email, ValidationError
-from proj.models import User
+from proj.models import User, Product
 
 class ProductForm(FlaskForm):
     name = StringField('Назва продукту', validators=[DataRequired(message='Назва не може бути пустою!'), Length(max=64)])
     in_stock = IntegerField('Кількість на складі',validators=[NumberRange(min=0, message='Кількість не може бути менше нуля!')])
     description = TextAreaField('Опис продукту', validators=[DataRequired()])
+    price = FloatField('Ціна продукту', validators=[NumberRange(min=0.0, message='Ціна не може бути менше нуля!')])
     submit = SubmitField('Створити продукт')
 
     class Meta:
-        csrf = False    #Спеціально додаємо вразливість
+        csrf = False
         # VULNERABILITY: CSRF Protection Disabled
         # - Form has no CSRF protection
         # - Vulnerable to Cross-Site Request Forgery attacks
         # - Attackers can submit forms on behalf of authenticated users
         # - Should enable CSRF protection for all forms
+
+class AddToCart(FlaskForm):
+    product_id = HiddenField('ID', validators=[DataRequired()])
+    quantity = IntegerField('Кількість', validators=[DataRequired(), NumberRange(min=1)])
+    submit = SubmitField('Додати до кошику')
+
+class OrderForm(FlaskForm):
+    delivery = SelectField('Оберіть спосіб доставки',
+                          validators=[DataRequired(message='Необхідно обрати спосіб доставки!')],
+                          choices=[('nova_poshta', 'Нова пошта'), ('ukrposhta', 'Укрпошта'), ('self_pickup', 'Самовивіз')], 
+                          default='self_pickup')
+    submit = SubmitField('Оформити замовлення')
     
+    # VULNERABILITY: No Validation of Delivery Address
+    # - No required validation for address when delivery is selected
+    # - No verification of address format or existence
+    # - Could lead to failed deliveries or attacks via specially crafted addresses
+
 class UserForm(FlaskForm):
     name = StringField('Ім\'я', validators=[DataRequired(),Length(max=64)])
     surname = StringField('Прізвище', validators=[DataRequired(),Length(max=64)])

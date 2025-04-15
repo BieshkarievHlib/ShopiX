@@ -7,13 +7,19 @@
                 <div class="card-body">
                     <h2 class="card-title mb-4">{{ product.name }}</h2>
                     
-                    <div class="mb-4">
-                        <h5>Кількість на складі:</h5>
-                        {% if product.in_stock > 0 %}
-                            <span class="badge badge-success">{{ product.in_stock }}</span>
-                        {% else %}
-                            <span class="badge badge-danger">Немає в наявності</span>
-                        {% endif %}
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>Кількість на складі:</h5>
+                            {% if product.in_stock > 0 %}
+                                <span class="badge badge-success">{{ product.in_stock }}</span>
+                            {% else %}
+                                <span class="badge badge-danger">Немає в наявності</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <h5>Ціна:</h5>
+                            <span class="product-price">{{ product.price }} грн</span>
+                        </div>
                     </div>
 
                     {% if product.description %}
@@ -25,23 +31,47 @@
                         </div>
                     {% endif %}
 
+                    <!-- Add to Cart Form -->
+                    {% if product.in_stock > 0 %}
+                        <div class="mb-4 p-3 bg-light border rounded">
+                            <form method="POST" action="{{ url_for('product_details', id=product.id) }}">
+                                {{ form.hidden_tag() }}
+                                {{ form.product_id }}
+                                <div class="form-group row">
+                                    <label for="quantity" class="col-sm-4 col-form-label">{{ form.quantity.label }}</label>
+                                    <div class="col-sm-8">
+                                        <div class="input-group">
+                                            {{ form.quantity(class="form-control", min=1, max=product.in_stock) }}
+                                            <div class="input-group-append">
+                                                {{ form.submit(class="btn btn-primary") }}
+                                            </div>
+                                        </div>
+                                        {% if form.quantity.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {{ form.quantity.errors[0] }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    {% endif %}
+
                     <div class="d-flex justify-content-between align-items-center">
                         <a href="{{ url_for('product_edit', id=product.id) }}" class="btn btn-warning">
-                            Редагувати продукт
+                            <i class="fas fa-edit"></i> Редагувати продукт
                         </a>
                         
-                        <form action="{{ url_for('product_delete', id=product.id) }}" method="post" class="d-inline">
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
-                                Видалити продукт
-                            </button>
-                        </form>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
+                            <i class="fas fa-trash"></i> Видалити продукт
+                        </button>
                     </div>
                 </div>
             </div>
 
             <div class="mt-3">
                 <a href="{{ url_for('product_list') }}" class="btn btn-secondary">
-                    Назад до списку продуктів
+                    <i class="fas fa-arrow-left"></i> Назад до списку продуктів
                 </a>
             </div>
         </div>
@@ -74,6 +104,11 @@
         .description-text {
             white-space: pre-wrap;
             line-height: 1.5;
+        }
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745;
         }
     </style>
 {% endblock %}
