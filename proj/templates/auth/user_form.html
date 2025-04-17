@@ -127,11 +127,11 @@
                                 {% endif %}
                             </button>
                             {% if form.name.data and user %}
-                                <a href="{{ url_for('user_details', id=user.id) }}" class="btn btn-secondary">
+                                <a href="{{ url_for('auth.profile', id=user.id) }}" class="btn btn-secondary">
                                     Назад до профілю
                                 </a>
                             {% else %}
-                                <a href="{{ url_for('product_list') }}" class="btn btn-secondary">
+                                <a href="{{ url_for('products.index') }}" class="btn btn-secondary">
                                     Назад до списку продуктів
                                 </a>
                             {% endif %}

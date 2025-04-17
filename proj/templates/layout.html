@@ -35,7 +35,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="/">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('products.index') }}">
                 <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmZiI+PHBhdGggZD0iTTEyIDJMMiA3bDEwIDUgMTAtNS0xMC01ek0yIDE3bDEwIDUgMTAtNVYxMkwyIDE3eiIvPjwvc3ZnPg==" alt="ShopiX Logo">
                 <span>ShopiX</span>
             </a>
@@ -45,18 +45,18 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Каталог</a>
+                        <a class="nav-link" href="{{ url_for('products.index') }}">Каталог</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Новини</a>
+                        <a class="nav-link" href="{{ url_for('products.index') }}">Новини</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Контакти</a>
+                        <a class="nav-link" href="{{ url_for('products.index') }}">Контакти</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('cart') }}">
+                        <a class="nav-link" href="{{ url_for('cart.index') }}">
                             <i class="fas fa-shopping-cart"></i> Кошик
                             {% if session.cart and session.cart|length > 0 %}
                                 <span class="badge badge-pill badge-success">{{ session.cart|length }}</span>
@@ -65,23 +65,23 @@
                     </li>
                     {% if current_user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('user_details', id=current_user.id) }}">
+                            <a class="nav-link" href="{{ url_for('auth.profile', id=current_user.id) }}">
                                 <i class="fas fa-user"></i> Мій профіль
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('logout') }}">
+                            <a class="nav-link" href="{{ url_for('auth.logout') }}">
                                 <i class="fas fa-sign-out-alt"></i> Вийти
                             </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('register') }}">
+                            <a class="nav-link" href="{{ url_for('auth.register') }}">
                                 <i class="fas fa-user-plus"></i> Реєстрація
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('login') }}">
+                            <a class="nav-link" href="{{ url_for('auth.login') }}">
                                 <i class="fas fa-sign-in-alt"></i> Увійти
                             </a>
                         </li>
