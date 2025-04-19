@@ -1,7 +1,8 @@
 from flask import Flask, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
+from flask_principal import Principal, Identity, UserNeed, RoleNeed, identity_loaded
 from markupsafe import Markup
 
 # Create extensions before app initialization
@@ -21,6 +22,7 @@ def nl2br(value):
 
 def create_app():
     app = Flask(__name__)
+    principals = Principal(app)
     
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -35,6 +37,7 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
+    principals.init_app(app)
     
     app.jinja_env.filters['nl2br'] = nl2br
     
@@ -59,3 +62,10 @@ app = create_app()
 def load_user(user_id):
     from proj.auth.models import User
     return User.query.get(int(user_id))
+
+@identity_loaded.connect
+def on_identity_loaded(sender, identity):
+    identity.user = current_user
+    if not current_user.is_anonymous:
+        identity.provides.add(UserNeed(current_user.id))
+        identity.provides.add(RoleNeed(current_user.role.name))

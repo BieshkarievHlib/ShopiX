@@ -7,7 +7,6 @@ from proj.cart.models import Order, OrderToProduct
 from proj.cart.forms import OrderForm
 from proj.products.models import Product
 
-# Template helper function to get product by ID
 @cart.context_processor
 def utility_processor():
     def get_product(product_id):
@@ -62,6 +61,7 @@ def clear():
 @cart.route('/checkout', methods=['GET', 'POST'])
 @login_required
 def checkout():
+    #TODO: add checkout for anonymous users
     if 'cart' not in session or len(session['cart']) == 0:
         return redirect(url_for('products.index'))
 

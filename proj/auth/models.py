@@ -15,6 +15,9 @@ class User(UserMixin, db.Model):
 
     orders = db.relationship('Order', backref='user', lazy=True)
 
+    role = db.relationship('Role', backref='users', lazy=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
+
     def check_password(self, password):
         return self.password == password  
         # VULNERABILITY: Plain text password storage and comparison
@@ -25,3 +28,7 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return f'User {self.username}"\n\tName: {self.name} {self.surname}\n\tE-mail: {self.email}'
+
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32), unique=True, nullable=False)

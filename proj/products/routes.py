@@ -6,6 +6,7 @@ from proj.products import products
 from proj.products.models import Product
 from proj.products.forms import ProductForm
 from proj.cart.forms import AddToCart
+from proj.auth.permissions import roles_required
 
 @products.route('/')
 def index():
@@ -21,14 +22,11 @@ def details(id):
 
     form = AddToCart(product_id=product.id)
     if form.validate_on_submit():
-        # Check if product already in cart
         cart_item = next((item for item in session['cart'] if int(item['id']) == int(product.id)), None)
         
         if cart_item:
-            # Update quantity if product already in cart
             cart_item['quantity'] = int(cart_item['quantity']) + int(form.quantity.data)
         else:
-            # Add new item to cart
             session['cart'].append({
                 'id': int(form.product_id.data),
                 'quantity': int(form.quantity.data)
@@ -40,8 +38,8 @@ def details(id):
     return render_template('products/product_details.html', product=product, form=form)
 
 @products.route('/new', methods=['GET', 'POST'])
-@login_required
-def create():  # Vulnerability: IDOR and CSRF (check other comments for details)
+@roles_required('admin')
+def create():  # Vulnerability: CSRF (check other comments for details)
     form = ProductForm()
     if form.validate_on_submit():
         product = Product(
@@ -57,7 +55,7 @@ def create():  # Vulnerability: IDOR and CSRF (check other comments for details)
     return render_template('products/product_form.html', form=form)
 
 @products.route('/<int:id>/edit', methods=['GET', 'POST'])
-@login_required
+@roles_required('admin')
 def edit(id):
     product = Product.query.get_or_404(id)
     form = ProductForm(obj=product)
@@ -73,7 +71,7 @@ def edit(id):
     return render_template('products/product_form.html', form=form)
 
 @products.route('/<int:id>/delete', methods=['POST'])
-@login_required
+@roles_required('admin')
 def delete(id):
     product = Product.query.get_or_404(id)
     db.session.delete(product)
