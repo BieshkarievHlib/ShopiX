@@ -44,10 +44,12 @@ def create_app():
     from proj.auth import auth as auth_blueprint
     from proj.products import products as products_blueprint
     from proj.cart import cart as cart_blueprint
+    from proj.admin import admin as admin_blueprint
     
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(products_blueprint)
     app.register_blueprint(cart_blueprint)
+    app.register_blueprint(admin_blueprint)
     
     # Root route
     @app.route('/')

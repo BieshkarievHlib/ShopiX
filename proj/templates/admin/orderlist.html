@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h1>Замовлення (status = {{ request.args.get('status') }})</h1>
+
+  {% if orders %}
+    <ul class="list-group">
+      {% for order in orders %}
+        <li class="list-group-item">
+          Order #{{ order.id }} – {{ order.delivery }} – {{ order.status }} - {{ order.user_id }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No orders found for this status.</p>
+  {% endif %}
+{% endblock %} 
