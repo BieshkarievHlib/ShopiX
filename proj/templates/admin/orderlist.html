@@ -1,17 +1,42 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <h1>Замовлення (status = {{ request.args.get('status') }})</h1>
+<h1>Список замовлень</h1>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Клієнт</th>
+        <th>Час розміщення</th>
+        <th>Товари</th>
+        <th>Статус</th>
+        <th>Дії</th>
+    </tr>
+    {% for order in orders %}
+    <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.user_id }}</td>
+        <td>{{ order.created_at.strftime('%d.%m %H:%M') }}</td>
+        <td>{% for product in order.products %}
+              {{ product.product.name }} - {{ product.quantity }}{% if not loop.last %},<br>{% endif %}
+            {% endfor %}
+        </td>
+        <td>
+            <form action="{{ url_for('admin.update_order', order_id=order.id) }}" method="post">
+                <select name="status" onchange="this.form.submit()">
+                    <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Очікує</option>
+                    <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>Обробляється</option>
+                    <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Відправлено</option>
+                    <option value="completed" {% if order.status == 'completed' %}selected{% endif %}>Завершено</option>
+                </select>
+            </form>
+        </td>
+        <td>
+          <form action="{{ url_for('admin.delete_order', order_id=order.id) }}" method="post" style="display:inline;">
+            <button type="submit" onclick="return confirm('Точно видалити замовлення?')">Видалити</button>
+          </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 
-  {% if orders %}
-    <ul class="list-group">
-      {% for order in orders %}
-        <li class="list-group-item">
-          Order #{{ order.id }} – {{ order.delivery }} – {{ order.status }} - {{ order.user_id }}
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No orders found for this status.</p>
-  {% endif %}
 {% endblock %} 

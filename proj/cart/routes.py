@@ -1,6 +1,9 @@
 from flask import render_template, redirect, url_for, request, session
 from flask_login import login_required, current_user
 
+from pytz import timezone
+from datetime import datetime
+
 from proj import db
 from proj.cart import cart
 from proj.cart.models import Order, OrderToProduct
@@ -70,7 +73,9 @@ def checkout():
     if form.validate_on_submit():
         order = Order(
             user_id=current_user.id,
-            delivery=form.delivery.data
+            delivery=form.delivery.data,
+            status='pending',
+            created_at=datetime.now(timezone('Europe/Kyiv'))
         )
 
         db.session.add(order)
@@ -87,6 +92,11 @@ def checkout():
                 db.session.add(order_item)
                 
                 product.in_stock -= int(item['quantity'])
+                #VULNERABILITY: denial of service
+                # - Vulnerable to DoS attacks 
+                # - Allows user (specifically anonymous) to decrement product.in_stock 'till it reaches 0.
+                # - Restrictions implementation/more complex transaction system is recommended.
+
             else:
                 return redirect(url_for('cart.index'))
         

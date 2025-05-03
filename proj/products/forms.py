@@ -11,7 +11,7 @@ class ProductForm(FlaskForm):
 
     class Meta:
         csrf = False
-        # VULNERABILITY: CSRF Protection Disabled
+        # VULNERABILITY: CSRF protection disabled
         # - Form has no CSRF protection
         # - Vulnerable to Cross-Site Request Forgery attacks
         # - Attackers can submit forms on behalf of authenticated users
